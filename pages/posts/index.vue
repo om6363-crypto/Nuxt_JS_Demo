@@ -8,6 +8,7 @@
 <script >
 import PostCard from '../../components/PostCard.vue'
 export default {
+    middleware: 'log',
     components: {
         PostCard
     },

@@ -40,6 +40,10 @@ export default {
     baseURL: 'https://jsonplaceholder.typicode.com'
   },
 
+  plugins:[
+    '~/plugins/axios-fakestore.js'
+  ],
+
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
   }

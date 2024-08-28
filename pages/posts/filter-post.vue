@@ -3,7 +3,12 @@
         <h1>Filtered Posts</h1>
         <p v-if="query.UserId">User ID: {{ query.UserId }}</p>
         <p v-else>Please Provide a valid UserID as a query parameter to filter the users</p>
-
+        <ul>
+            <li v-for="post in filteredPosts" :key="post.id">
+                <h2>{{ post.title }}</h2>
+                <p>{{ post.body }}</p>
+            </li>
+        </ul>
     </div>
 </template>
 

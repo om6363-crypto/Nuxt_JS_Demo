@@ -1,9 +1,9 @@
 <template>
     <div>
-        <h1> Create a New Post</h1>
-        <form @onSubmit="submitForm">
+        <h1>Create new Post</h1>
+        <form @submit.prevent="submitForm">
             <div>
-                <label for="id">ID</label>
+                <label for="id">Id</label>
                 <input type="number" id="id" v-model="form.id" @blur="validateId"/>
                 <span v-if="errors.id">{{ errors.id }}</span>
             </div>
@@ -17,16 +17,15 @@
                 <input type="text" id="body" v-model="form.body" @blur="validateBody"/>
                 <span v-if="errors.body">{{ errors.body }}</span>
             </div>
-            <button type="submit">Submit</button>
+            <button type="submit">Create</button>
         </form>
-
-    <p v-if="successMessage">{{ successMessage }}</p>
-</div>
+        <p v-if="successMessage">{{ successMessage }}</p>
+    </div>
 </template>
 
 <script>
 export default {
-    data(){
+    data() {
         return {
             form: {
                 title: '',
@@ -38,55 +37,52 @@ export default {
         }
     },
     methods: {
-        validateTitle(){
-            if(!this.form.title){
-                this.errors.title = 'Title is required'
-            }
-            else{
+        validateTitle() {
+            if (!this.form.title) {
+                this.errors.title = "Title is required";
+            } else {
                 delete this.errors.title;
             }
         },
-        validateBody(){
-            if(!this.form.body){
-                this.errors.body = 'Body is required'
+        validateId() {
+            if (!this.form.id) {
+                this.errors.id = "ID is required";
+            } else if (isNaN(this.form.id)) {
+                this.errors.id = "ID must be a number";
+            } else {
+                delete this.errors.id;
             }
-            else{
+        },
+        validateBody() {
+            if (!this.form.body) {
+                this.errors.body = "Body is required";
+            } else {
                 delete this.errors.body;
             }
         },
-        validateId(){    
-            if(!this.form.id){
-                this.errors.id = 'Id is required'
-            }
-            else if(isNaN(this.form.id)){
-                this.errors.id = 'User ID must be a number is required'
-            }
-            else{
-                delete this.errors.id;
-            }
-        }
-    },
+        async submitForm() {
+            this.validateId();
+            this.validateBody();
+            this.validateTitle();
 
-    async submitForm(){
-        this.validateId(),
-        this.validateBody(),
-        this.validateId()
-        if(Object.keys(this.errors).length === 0){
-            try{
-                const response = await this.$axios.$post('https://jsonplaceholder.typicode.com/posts', this.form)
-                if(response.status === 201){
-                    successMessage="Post created successfully"
-                    console.log(response.data);
-                    console.log("Form Data----", JSON.stringify(this.form))
-                    this.form={
-                        title:'',
-                        body:'',
-                        id: null
+            if (Object.keys(this.errors).length === 0) {
+                try {
+                    const response = await this.$axios.$post('https://jsonplaceholder.typicode.com/posts', this.form);
+
+                    if (response) {
+                        this.successMessage = "Post created successfully";
+                        console.log(response);
+                        console.log("Form data--", JSON.stringify(this.form));
+                        this.form = {
+                            title: '',
+                            body: '',
+                            id: null
+                        };
                     }
+
+                } catch (error) {
+                    console.error("Error in submitting form: ", error.message);
                 }
-            }
-            catch(error){
-                console.log("Error Submitting Form", error.message)
             }
         }
     }
